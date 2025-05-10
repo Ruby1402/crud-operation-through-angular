@@ -1,0 +1,106 @@
+<div class="container">
+  <h1>Student INFO Form</h1>
+  <form (submit)="addEntry()" class="form" #entryForm="ngForm" novalidate>
+    <div class="form-group">
+      <label for="srno">Sr No</label>
+      <input
+        type="number"
+        id="srno"
+        name="srno"
+        [(ngModel)]="entry.srno"
+        required
+        min="1"
+        #srno="ngModel"
+      />
+      <!-- Validation Message -->
+      <div *ngIf="srno.invalid && srno.touched" class="error">
+        <span *ngIf="srno.errors?.['required']" style="color: red;" >Sr No is required.</span>
+        <span *ngIf="srno.errors?.['min']" style="color: red;" >Sr No must be greater than 0.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        [(ngModel)]="entry.name"
+        required
+        pattern="^[^0-9]+$"
+        #name="ngModel"
+      />
+      <!-- Validation Message -->
+      <div *ngIf="name.invalid && name.touched" class="error">
+        <span *ngIf="name.errors?.['required']" style="color: red;">Name is required.</span>
+        <span *ngIf="name.errors?.['pattern']" style="color: red;" >Name cannot be a number.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="branch">Branch</label>
+      <input
+        type="text"
+        id="branch"
+        name="branch"
+        [(ngModel)]="entry.branch"
+        required
+        pattern="^[^0-9]+$"
+        #branch="ngModel"
+      />
+      <!-- Validation Message -->
+      <div *ngIf="branch.invalid && branch.touched" class="error">
+        <span *ngIf="branch.errors?.['required']" style="color: red;" >Branch is required.</span>
+        <span *ngIf="branch.errors?.['pattern']" style="color: red;" >Branch cannot be a number.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="rollno">Roll No</label>
+      <input
+        type="text"
+        id="rollno"
+        name="rollno"
+        [(ngModel)]="entry.rollno"
+        required
+        pattern="^[0-9]+$"
+        maxlength="2"
+        #rollno="ngModel"
+      />
+      <!-- Validation Message -->
+      <div *ngIf="rollno.invalid && rollno.touched" class="error">
+        <span *ngIf="rollno.errors?.['required']" style="color: red;" >Roll No is required.</span>
+        <span *ngIf="rollno.errors?.['pattern']" style="color: red;" >Roll No must be a number.</span>
+        <span *ngIf="rollno.errors?.['maxlength']" style="color: red;" >Roll No must be ≤ 3 digits.</span>
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="entryForm.invalid">
+      {{ editingIndex !== null ? 'Update Entry' : 'Add Entry' }}
+    </button>
+  </form>
+
+  <table *ngIf="entries.length > 0">
+    <thead>
+      <tr>
+        <th>Sr No</th>
+        <th>Name</th>
+        <th>Branch</th>
+        <th>Roll No</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let e of entries; let i = index">
+        <td>{{ e.srno }}</td>
+        <td>{{ e.name }}</td>
+        <td>{{ e.branch }}</td>
+        <td>{{ e.rollno }}</td>
+        <td>
+          <button (click)="deleteEntry(i)">Delete</button>
+          <button (click)="editEntry(i)">Edit</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
