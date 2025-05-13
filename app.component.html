@@ -1,4 +1,27 @@
 <div class="container">
+
+  <!-- ✅ Success Messages (Moved here just below the form) -->
+  <div
+    *ngIf="showAddSuccess"
+    style="margin-top: 10px; background-color: #d4edda; color: #155724; padding: 10px 20px; border: 1px solid #c3e6cb; border-radius: 5px;"
+  >
+    ✅ Entry added successfully!
+  </div>
+
+  <div
+    *ngIf="showEditSuccess"
+    style="margin-top: 10px; background-color: #fff3cd; color: #856404; padding: 10px 20px; border: 1px solid #ffeeba; border-radius: 5px;"
+  >
+    ✏️ Entry updated successfully!
+  </div>
+
+  <div
+    *ngIf="showDeleteSuccess"
+    style="margin-top: 10px; background-color: #f8d7da; color: #721c24; padding: 10px 20px; border: 1px solid #f5c6cb; border-radius: 5px;"
+  >
+    🗑️ Entry deleted successfully!
+  </div>
+
   <h1>Student INFO Form</h1>
   <form (submit)="addEntry()" class="form" #entryForm="ngForm" novalidate>
     <div class="form-group">
@@ -79,6 +102,8 @@
       {{ editingIndex !== null ? 'Update Entry' : 'Add Entry' }}
     </button>
   </form>
+
+  
 
   <table *ngIf="entries.length > 0">
     <thead>
