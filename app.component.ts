@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
     rollno: '',
   };
   // entry represents the student being added or edited.
-// Starts empty so the form is blank.
+  // Starts empty so the form is blank.
 
   // Array to hold all entries
   entries: Entry[] = [];
@@ -53,6 +53,11 @@ export class AppComponent implements OnInit {
   //in our case it is server.js file and the server we started before starting this web app
   private apiUrl = 'http://localhost:3000/entries';
 
+  // Flags for showing success messages
+  showAddSuccess = false;
+  showEditSuccess = false;
+  showDeleteSuccess = false;
+
   // Constructor that injects dependencies
   constructor(
     private http: HttpClient, // For HTTP calls
@@ -63,8 +68,8 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.loadEntriesFromBackend(); // Load existing entries
   }
-//When the component is first shown, this runs.
-// It loads the list of entries from the server.
+  //When the component is first shown, this runs.
+  // It loads the list of entries from the server.
 
   // Load all entries from the backend server
   private loadEntriesFromBackend() {
@@ -86,12 +91,12 @@ export class AppComponent implements OnInit {
       });
   }
 
-//   //this.http.get<Entry[]>(...) → sends a GET request to the API.
-// pipe(tap(...)) → logs the data before doing anything with it.
-// subscribe(...) → handles the response.
-// next: → on success, it updates this.entries.
-// zone.run() is used so the UI updates properly.
-// error: → logs any issue with the request.
+  //   //this.http.get<Entry[]>(...) → sends a GET request to the API.
+  // pipe(tap(...)) → logs the data before doing anything with it.
+  // subscribe(...) → handles the response.
+  // next: → on success, it updates this.entries.
+  // zone.run() is used so the UI updates properly.
+  // error: → logs any issue with the request.
 
   // Add a new entry or update an existing one
   addEntry() {
@@ -158,6 +163,7 @@ export class AppComponent implements OnInit {
     this.http.post(this.apiUrl, entry).subscribe({
       next: (response) => {
         console.log('Entry added to backend:', response);
+        this.showTemporaryMessage('add'); // ✅ Show success message
         this.loadEntriesFromBackend(); // Refresh list
       },
       error: (error) => {
@@ -176,6 +182,7 @@ export class AppComponent implements OnInit {
     this.http.put(`${this.apiUrl}/${updatedEntry.srno}`, updatedEntry).subscribe({
       next: (response) => {
         console.log('Entry updated on backend:', response);
+        this.showTemporaryMessage('edit'); // ✅ Show success message
         this.loadEntriesFromBackend(); // Refresh to sync UI with backend
       },
       error: (error) => {
@@ -203,6 +210,7 @@ export class AppComponent implements OnInit {
     this.http.delete(`${this.apiUrl}/${entryToDelete.srno}`).subscribe({
       next: (response) => {
         console.log('Entry deleted from backend:', response);
+        this.showTemporaryMessage('delete'); // ✅ Show success message
         this.loadEntriesFromBackend(); // Reload for consistency
       },
       error: (error) => {
@@ -240,5 +248,18 @@ export class AppComponent implements OnInit {
   private isValidRollno(rollno: string): boolean {
     const num = parseInt(rollno, 10);
     return !isNaN(num) && num <= 99;
+  }
+
+  // Show a message for 3 seconds based on action type
+  private showTemporaryMessage(action: 'add' | 'edit' | 'delete') {
+    if (action === 'add') this.showAddSuccess = true;
+    if (action === 'edit') this.showEditSuccess = true;
+    if (action === 'delete') this.showDeleteSuccess = true;
+
+    setTimeout(() => {
+      this.showAddSuccess = false;
+      this.showEditSuccess = false;
+      this.showDeleteSuccess = false;
+    }, 3000); // Hide after 3 seconds
   }
 }
